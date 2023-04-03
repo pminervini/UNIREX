@@ -51,13 +51,18 @@ def get_neptune_logger(
 
     tags.append(log_db)
 
+    # breakpoint()
+
     neptune_logger = NeptuneLogger(
         api_key=neptune_api_key,
-        project_name=project_name,
-        experiment_name=name,
-        params=args_dict,
-        tags=tags,
-        offline_mode=offline,
+        # project_name=project_name,
+        project=project_name,
+        # experiment_name=name,
+        name=name,
+        # params=args_dict,
+        tags=[tag for tag in tags],
+        # offline_mode=offline,
+        # **args_dict
     )
 
     try:

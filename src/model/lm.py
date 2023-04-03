@@ -787,7 +787,7 @@ class LanguageModel(BaseModel):
         if self.save_outputs:
             ret_dict['attrs'] = attrs.detach()
 
-        breakpoint()
+        # breakpoint()
 
         # def detach_if_tensor(x: Tensor) -> Tensor:
         #     return x.detach() if isinstance(x, Tensor) else x
@@ -805,20 +805,21 @@ class LanguageModel(BaseModel):
         elif split == 'test':
             splits = [outputs[0]['eval_split']]
         outputs_list = outputs if split == 'dev' else [outputs]
-        
-        for dataset_idx, eval_split in enumerate(splits):
-            outputs = outputs_list[dataset_idx]
-            log_epoch_losses(self, outputs, eval_split)  # Log epoch losses
-            log_epoch_metrics(self, outputs, eval_split)  # Log epoch metrics
 
-        # Save outputs to file            
-        if self.save_outputs:
-            out_dir = f'{get_original_cwd()}/../save/{self.exp_id}/model_outputs/{self.dataset}'
-            if not os.path.exists(out_dir):
-                os.makedirs(out_dir)
-            keys = ['preds', 'attrs']
+        with torch.inference_mode():
 
-            with torch.inference_mode():
+            for dataset_idx, eval_split in enumerate(splits):
+                outputs = outputs_list[dataset_idx]
+                log_epoch_losses(self, outputs, eval_split)  # Log epoch losses
+                log_epoch_metrics(self, outputs, eval_split)  # Log epoch metrics
+
+            # Save outputs to file
+            if self.save_outputs:
+                out_dir = f'{get_original_cwd()}/../save/{self.exp_id}/model_outputs/{self.dataset}'
+                if not os.path.exists(out_dir):
+                    os.makedirs(out_dir)
+                keys = ['preds', 'attrs']
+
                 for key in keys:
                     if key == 'preds':
                         logits = torch.cat([x['logits'] for x in outputs])

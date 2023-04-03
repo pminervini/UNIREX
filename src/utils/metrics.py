@@ -13,15 +13,21 @@ def init_best_metrics():
     }
 
 def init_perf_metrics(num_classes):
+    task = 'multiclass'
+    if num_classes == 2:
+        task = 'binary'
+
+    # breakpoint()
+
     perf_metrics = torch.nn.ModuleDict({
-        'acc': torchmetrics.Accuracy(),
-        'macro_f1': torchmetrics.F1(num_classes=num_classes, average='macro'),
-        'micro_f1': torchmetrics.F1(num_classes=num_classes, average='micro'),
+        'acc': torchmetrics.Accuracy(task=task, num_classes=num_classes),
+        'macro_f1': torchmetrics.F1Score(task=task, num_classes=num_classes, average='macro'),
+        'micro_f1': torchmetrics.F1Score(task=task, num_classes=num_classes, average='micro'),
     })
 
     assert num_classes >= 2
     if num_classes == 2:
-        perf_metrics['binary_f1'] = torchmetrics.F1(num_classes=num_classes, average='micro', ignore_index=0)
+        perf_metrics['binary_f1'] = torchmetrics.F1Score(task=task, num_classes=num_classes, average='micro', ignore_index=0)
     
     return perf_metrics
 

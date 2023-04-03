@@ -55,7 +55,7 @@ class BaseModel(pl.LightningModule):
         if stage == 'fit':
             # Get train dataloader
             train_loader = self.trainer.datamodule.train_dataloader()
-            ngpus = self.trainer.num_gpus
+            ngpus = self.trainer.num_devices # num_gpus
 
             # Calculate total steps
             eff_train_batch_size = (self.trainer.datamodule.train_batch_size *

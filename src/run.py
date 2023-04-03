@@ -80,8 +80,16 @@ def build(cfg) -> Tuple[pl.LightningDataModule, pl.LightningModule, pl.Trainer]:
             cfg.logger.neptune_exp_id = cfg.logger.name
         else:
             if cfg.logger.logger == "neptune":
-                exp_dir = run_logger.experiment_id
-                cfg.logger.neptune_exp_id = run_logger.experiment_id
+                # breakpoint()
+
+                # using datetime module
+                import datetime
+
+                # ct stores current time
+                ct = datetime.datetime.now()
+
+                exp_dir = str(ct)  # run_logger.experiment_id
+                cfg.logger.neptune_exp_id = str(ct)  # run_logger.experiment_id
             else:
                 raise NotImplementedError
         cfg.save_dir = os.path.join(cfg.save_dir, exp_dir)
@@ -98,7 +106,6 @@ def build(cfg) -> Tuple[pl.LightningDataModule, pl.LightningModule, pl.Trainer]:
     trainer = instantiate(
         cfg.trainer,
         callbacks=get_callbacks(cfg),
-        checkpoint_callback=cfg.save_checkpoint,
         logger=run_logger,
         _convert_="all",
     )

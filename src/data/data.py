@@ -160,7 +160,7 @@ class DataModule(pl.LightningDataModule):
 
         return dataset, train_rationales_dataset
 
-    def setup(self, splits=['all']):
+    def setup(self, splits=['all'], stage=None):
         self.data = {}
         splits = ['train', 'dev', 'test'] if splits == ['all'] else splits
         for split in splits:
