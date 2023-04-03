@@ -789,12 +789,6 @@ class LanguageModel(BaseModel):
 
         # breakpoint()
 
-        # def detach_if_tensor(x: Tensor) -> Tensor:
-        #     return x.detach() if isinstance(x, Tensor) else x
-
-        # ret_dict_detach = {k: detach_if_tensor(v) for k, v in ret_dict.items()}
-        # ret_dict = ret_dict_detach
-
         return ret_dict
 
     def aggregate_epoch(self, outputs, split):
